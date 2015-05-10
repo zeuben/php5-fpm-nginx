@@ -13,7 +13,7 @@ for their work on [nginx-php-fpm](https://github.com/ngineered/nginx-php-fpm)
 docker pull yoanisgil/php5-fpm-nginx:latest
 ``` 
 
-* Launch your application within a container provided by the pulled image:
+* Launch your application within the container provided by the pulled image:
 
 ```
 docker run -p 8000:80 --name appname -v /app/root:/srv/www -v /path/to/nginx/log:/var/log/nginx yoanisgil/php5-fpm-nginx 
