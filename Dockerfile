@@ -5,15 +5,10 @@ MAINTAINER Yoanis Gil <gil.yoanis@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # PHP5 Stack and nginx
-RUN apt-get update 
-RUN apt-get -y install php5-fpm php5-mysql php-apc php5-imagick php5-imap php5-mcrypt php5-curl php5-cli php5-gd php5-pgsql\
-                       php5-sqlite php5-common php-pear curl php5-json php5-redis php5-memcache nginx-full python-pip 
-# Cleanup
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Override nginx's default config
-ADD ./default /etc/nginx/sites-available/default
-ADD ./nginx.conf /etc/nginx/nginx.conf
+RUN apt-get update && \ 
+    apt-get -y install php5-fpm php5-mysql php-apc php5-imagick php5-imap php5-mcrypt php5-curl php5-cli php5-gd php5-pgsql\
+                       php5-sqlite php5-common php-pear curl php5-json php5-redis php5-memcache nginx-full python-pip && \ 
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # php-fpm config
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php5/fpm/php.ini
@@ -24,8 +19,11 @@ RUN sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /
 RUN find /etc/php5/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 # Supervisor config
-RUN pip install supervisor
-RUN pip install supervisor-stdout
+RUN pip install supervisor supervisor-stdout
+
+# Override nginx's default config
+ADD ./default /etc/nginx/sites-available/default
+ADD ./nginx.conf /etc/nginx/nginx.conf
 ADD ./supervisord.conf /etc/supervisord.conf
 
 # Stop nginx and php-fpm
@@ -44,4 +42,4 @@ RUN chmod 755 /start.sh
 EXPOSE 443
 EXPOSE 80
 
-CMD ["/bin/bash", "/start.sh"]
+ENTRYPOINT ["/bin/bash", "/start.sh"]

@@ -28,7 +28,10 @@ files)
 # Nginx configuration
 
 Upon launch the startup script will setup as many nginx workers as available in the host. For further details refer to
-file nginx.conf within this report. 
+file nginx.conf within this repository. 
+
+It is worth saying that the default nginx/php/fpm configuration is not production ready and I *strongly* encorauge you 
+to optimize it.
 
 # Note on static files.
 
@@ -73,6 +76,22 @@ docker run -p 8000:80 --name silex -v $(pwd):/srv/www -v /tmp:/var/log/nginx yoa
 ```
 
 - You can now visit http://localhost:8000/hello/world
+
+# Wordpress example
+
+- Get a recent wordpress version (this image was tested with wordpress 4.2.2) from https://wordpress.org/download/
+
+- Extract file contents anywhere in your filesystem and cd (change dir) to the resulting directory. 
+
+- Launch the container:
+
+```
+docker run -p 8000:80 --name silex -v $(pwd):/srv/www -v /tmp:/var/log/nginx yoanisgil/php5-fpm-nginx
+```
+
+Your wordpress instance is now accesible on http://localhost:8000
+
+# A note on OSX
 
 If you are running docker on OSX then you need to run *boot2docker ip* to figure out which URL to enter in your browser.
 Also since dockers on OSX actually run within a VirtualBox VM you need to be aware of how volumes work 
